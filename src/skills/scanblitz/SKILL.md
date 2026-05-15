@@ -95,18 +95,28 @@ curl -s -X POST "$SCANBLITZ_BASE" \
 
 ```json
 {
+  "action": "created",
   "qr_code": {
     "id": "uuid",
     "short_id": "xK7mQ3",
     "name": "My Landing Page",
     "destination_url": "https://example.com/landing",
     "scan_url": "https://kylpeyhiqtdonlqqguty.supabase.co/functions/v1/qr-redirect/xK7mQ3",
-    "is_active": true
+    "is_active": true,
+    "scan_count": 0,
+    "created_at": "2026-05-15T13:07:33Z"
+  },
+  "receipt": {
+    "created_by": "Your Partner Name",
+    "partner_ref": "openclaw:my-landing",
+    "user_id": "uuid",
+    "timestamp": "2026-05-15T13:07:33Z"
   }
 }
 ```
 
 > **Save the `short_id`** — you need it for analytics, updates, and deletion.
+> Every response includes an `action` confirming the operation and a `receipt` with provenance (who, when, correlation ref).
 
 ## Get QR Code Details
 
@@ -124,10 +134,13 @@ curl -s "$SCANBLITZ_BASE/analytics/xK7mQ3" \
 
 **Response includes:**
 
-- `total_scans` — total number of scans
-- `devices` — breakdown by device type (mobile, desktop, tablet)
-- `countries` — breakdown by country
-- `daily_scans` — scans per day
+- `action` — always `"analytics_retrieved"`
+- `analytics.total_scans` — total number of scans
+- `analytics.devices` — breakdown by device type (mobile, desktop, tablet)
+- `analytics.countries` — breakdown by country
+- `analytics.daily_scans` — scans per day
+- `analytics.last_scan_event` — most recent scan with device, country, city, browser, timestamp
+- `receipt` — who retrieved, when
 
 ## Update Destination
 
